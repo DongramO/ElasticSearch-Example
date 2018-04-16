@@ -1,0 +1,20 @@
+{
+  "name": "elasticsearch-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "elasticsearchclient": "^0.5.3",
+    "koa": "^2.5.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-router": "^7.4.0",
+    "lodash": "^4.17.5",
+    "mysql": "^2.15.0",
+    "request": "^2.85.0"
+  }
+}
