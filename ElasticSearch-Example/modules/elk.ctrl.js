@@ -3,8 +3,9 @@ const ElasticSearchClient = require('elasticsearchclient');
 const _ = require('lodash')
 const fs = require('fs')
 const util = require('util');
+const redis = require('../lib/redis')
 
-const mysqlCongif = require('../config/mysql')
+const mysqlConfig = require('../config/mysql')
 const dbConnection = require('../lib/dbconnection')
 const elkModel = require('../models/elk')
 
@@ -15,16 +16,17 @@ var serverOptions = {
           port: 9200
       }]
 }
-
 exports.insertIndex = async (ctx) => {
   console.log('insertIndex Access')
-  const elasticSearchClient = new ElasticSearchClient(serverOptions)
-
   let { query } = ctx.request
-
-  const connection = await dbConnection()
-  let result = await elkModel.selectDepartmentInfo(connection)
+  let result
   
+  const elasticSearchClient = new ElasticSearchClient(serverOptions)
+  const connection = await dbConnection()
+
+  result = await elkModel.selectDepartmentInfo(connection)
+  result = await redis.scanRedis();
+
   const commands = []
   _.forEach(result, v => {
     commands.push({ "index" : { "_index" :'mocam', "_type" : `${query.type}`} })
@@ -66,8 +68,6 @@ exports.selectIndex = async (ctx) => {
     }
   }
 
-  console.log(query.type)
-
   result = await new Promise((resolve, reject) => {
     elasticSearchClient.search('mocam', query.type, qryObj, function(err, data){
       resolve(data)
@@ -75,4 +75,19 @@ exports.selectIndex = async (ctx) => {
   })
 
   ctx.body = JSON.parse(result)
+}
+
+exports.testFunc = async (ctx) => {
+  const { url } = ctx
+  let result
+  const connection = await dbConnection()
+  result = await elkModel.selectDepartmentInfo(connection)
+  result = { 'dept_info' : result }
+  result = await redis.setRedis(url, result)
+  ctx.body = {
+    code: 200,
+    status: 'success',
+    message: 'department list',
+    result,
+  }
 }

@@ -57,3 +57,7 @@ typings/
 # dotenv environment variables file
 .env
 
+#remove config files
+config/
+/ElasticSearch-Example/config/
+package-lock.json
