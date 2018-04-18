@@ -4,7 +4,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:docker": "docker-compose -f docker-compose.yml up --build -d",
+    "start:dev": "NODE_ENV=development && NODE_PATH=SRC nodemon src/index.js"
   },
   "author": "",
   "license": "ISC",

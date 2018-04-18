@@ -1,5 +1,5 @@
 let mysql = require('mysql')
-const mysqlConfig = require('../config/mysql')
+const mysqlConfig = require('../../config/mysql')
 
 let cluster = ''
 const __getPool = () => {
